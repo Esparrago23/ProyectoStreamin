@@ -5,6 +5,7 @@ import (
     "github.com/joho/godotenv"
     "streaming-service/src/routes"
     "streaming-service/src/services"
+    "streaming-service/src/database"
 )
 
 func main() {
@@ -14,7 +15,7 @@ func main() {
     }
 
     // Initialize database
-    InitDB()
+    db := database.InitDB()
 
     // Initialize Kafka service
     kafkaService, err := services.NewKafkaService()
@@ -23,8 +24,8 @@ func main() {
     }
 
     // Initialize routes with dependencies
-    routes.InitUserRoutes(DB)
-    routes.InitVideoRoutes(DB, kafkaService)
+    routes.InitUserRoutes(db)
+    routes.InitVideoRoutes(db, kafkaService)
 
     router := gin.Default()
     routes.SetupUserRoutes(router)
